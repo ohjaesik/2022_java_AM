@@ -1,6 +1,6 @@
 package com.koreaIT.java.Am;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +28,7 @@ public class Main {
 					continue;
 				}
 				System.out.println("번호   | 제목");
-				for (int i = articles.size() - 1; i < articles.size(); i--) {
+				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
 
 					System.out.printf("%d   | %s\n", article.id, article.title);
@@ -38,34 +38,38 @@ public class Main {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 
-				boolean foundArticle = false;
+				Article foundArticle = null;
 
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 					if (article.id == id) {
-						foundArticle = true;
+						foundArticle = article;
 						break;
 					}
 				}
-				if (foundArticle == false) {
+				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
-				} else {
-					System.out.printf("%d번 게시물은 존재합니다.\n", id);
-					int a = id - 1;
-					Article article = articles.get(a);
-					System.out.printf("번호 : %d\n ", article.id);
-					LocalDate now = LocalDate.now();
-					System.out.println("날짜 : " + now);
-					System.out.printf("제목 : %s\n ", article.title);
-					System.out.printf("내용 : %s\n ", article.body);
-
 				}
+					System.out.printf("%d번 게시물은 존재합니다.\n", id);
+					System.out.printf("번호 : %d\n", foundArticle.id);
+					LocalDateTime now = LocalDateTime.now();
+					System.out.println("날짜 : " + now);
+					System.out.printf("제목 : %s\n", foundArticle.title);
+					System.out.printf("내용 : %s\n", foundArticle.body);
+
+				
 			} else if (command.startsWith("article delete ")) {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
-				articles.remove(id-1);
-
+				boolean isfound = false;
+				
+				if (isfound == false) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+				}
+				else {
+					articles.remove(id-1);
+				}
 			} else if (command.equals("article write")) {
 				int id = lastArticleId + 1;
 				lastArticleId = id;
