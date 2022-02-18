@@ -51,15 +51,13 @@ public class Main {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
-					System.out.printf("%d번 게시물은 존재합니다.\n", id);
-					System.out.printf("번호 : %d\n", foundArticle.id);
-					System.out.printf("날짜 : %s\n", foundArticle.regDate);
-					System.out.printf("제목 : %s\n", foundArticle.title);
-					System.out.printf("내용 : %s\n", foundArticle.body);
+				System.out.printf("%d번 게시물은 존재합니다.\n", id);
+				System.out.printf("번호 : %d\n", foundArticle.id);
+				System.out.printf("날짜 : %s\n", foundArticle.regDate);
+				System.out.printf("제목 : %s\n", foundArticle.title);
+				System.out.printf("내용 : %s\n", foundArticle.body);
 
-				
-			} 
-			else if (command.startsWith("article delete ")) {
+			} else if (command.startsWith("article delete ")) {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 				int foundIndex = -1;
@@ -72,16 +70,38 @@ public class Main {
 						break;
 					}
 				}
-				
+
 				if (foundIndex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
 
-					articles.remove(foundIndex);
-					System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
-			} 
-		    else if (command.equals("article write")) {
+				articles.remove(foundIndex);
+				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+			}
+			else if (command.startsWith("article modify ")) {
+				String[] commandBits = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						System.out.printf("%d번 게시물은 존재합니다.\n", id);
+						System.out.printf("제목 : ");
+						String title = sc.nextLine();
+						System.out.printf("내용 : ");
+						String body = sc.nextLine();
+						Article article1 = new Article(id, regDate, title, body);
+						articles.add(article1);
+
+
+						
+						break;
+					}
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+				
+				}
+			}
+			else if (command.equals("article write")) {
 				int id = lastArticleId + 1;
 				lastArticleId = id;
 				System.out.printf("제목 : ");
@@ -101,11 +121,12 @@ public class Main {
 			}
 		}
 
-	sc.close();
+		sc.close();
 
-	System.out.println("== 프로그램 끝 ==");
+		System.out.println("== 프로그램 끝 ==");
 
-}}
+	}
+}
 
 class Article {
 	int id;
@@ -113,9 +134,9 @@ class Article {
 	String title;
 	String body;
 
-	Article(int id, String regdate, String title, String body) {
-		this.regDate = regDate;
+	Article(int id, String regDate, String title, String body) {
 		this.id = id;
+		this.regDate = regDate;
 		this.title = title;
 		this.body = body;
 	}
