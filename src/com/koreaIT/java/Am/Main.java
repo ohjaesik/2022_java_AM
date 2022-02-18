@@ -5,13 +5,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+	private static List<Article> articles;
+
+	static {
+		articles = new ArrayList<>();
+	}
+
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
 
+		makeTestData();
+
 		Scanner sc = new Scanner(System.in);
-		int lastArticleId = 0;
+
 		String regDate = Util.getNowDateTimeStr();
-		List<Article> articles = new ArrayList<>();
+
 		while (true) {
 			System.out.printf("명령어) ");
 			String command = sc.nextLine().trim();
@@ -52,7 +60,7 @@ public class Main {
 					continue;
 				}
 				foundArticle.increaseHit();
-				
+
 				System.out.printf("%d번 게시물은 존재합니다.\n", id);
 				System.out.printf("번호 : %d\n", foundArticle.id);
 				System.out.printf("날짜 : %s\n", foundArticle.regDate);
@@ -81,8 +89,7 @@ public class Main {
 
 				articles.remove(foundIndex);
 				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
-			}
-			else if (command.startsWith("article modify ")) {
+			} else if (command.startsWith("article modify ")) {
 
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
@@ -108,10 +115,8 @@ public class Main {
 				foundArticle.body = body;
 				System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
 
-			}
-			else if (command.equals("article write")) {
-				int id = lastArticleId + 1;
-				lastArticleId = id;
+			} else if (command.equals("article write")) {
+				int id = articles.size() + 1;
 				System.out.printf("제목 : ");
 				String title = sc.nextLine();
 				System.out.printf("내용 : ");
@@ -134,6 +139,19 @@ public class Main {
 		System.out.println("== 프로그램 끝 ==");
 
 	}
+
+	public static void makeTestData() {
+		System.out.println("테스트를 위한 데이터를 생성합니다.");
+		for (int i = 1; i <= 3; i++) {
+			int id = i;
+			String regDate = Util.getNowDateTimeStr();
+			String title = "123";
+			String body = "123";
+			Article TestData = new Article(id, regDate, title, body, 0);
+			articles.add(TestData);
+		}
+
+	}
 }
 
 class Article {
@@ -143,13 +161,18 @@ class Article {
 	String body;
 	int hit;
 
-	Article(int id, String regDate, String title, String body) {
+	Article(int id, String regDate, String title, String body, int hit) {
 		this.id = id;
 		this.regDate = regDate;
 		this.title = title;
 		this.body = body;
-		this.hit = 0;
+		this.hit = hit;
 	}
+
+	Article(int id, String regDate, String title, String body) {
+		this(id, regDate, title, body, 0);
+	}
+
 	public void increaseHit() {
 		hit++;
 	}
