@@ -1,6 +1,5 @@
 package com.koreaIT.java.Am;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,6 +10,7 @@ public class Main {
 
 		Scanner sc = new Scanner(System.in);
 		int lastArticleId = 0;
+		String regDate = Util.getNowDateTimeStr();
 		List<Article> articles = new ArrayList<>();
 		while (true) {
 			System.out.printf("명령어) ");
@@ -53,24 +53,35 @@ public class Main {
 				}
 					System.out.printf("%d번 게시물은 존재합니다.\n", id);
 					System.out.printf("번호 : %d\n", foundArticle.id);
-					LocalDateTime now = LocalDateTime.now();
-					System.out.println("날짜 : " + now);
+					System.out.printf("날짜 : %s\n", foundArticle.regDate);
 					System.out.printf("제목 : %s\n", foundArticle.title);
 					System.out.printf("내용 : %s\n", foundArticle.body);
 
 				
-			} else if (command.startsWith("article delete ")) {
+			} 
+			else if (command.startsWith("article delete ")) {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
-				boolean isfound = false;
+				int foundIndex = -1;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+
+						foundIndex = i;
+						break;
+					}
+				}
 				
-				if (isfound == false) {
+				if (foundIndex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
 				}
-				else {
-					articles.remove(id-1);
-				}
-			} else if (command.equals("article write")) {
+
+					articles.remove(foundIndex);
+					System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+			} 
+		    else if (command.equals("article write")) {
 				int id = lastArticleId + 1;
 				lastArticleId = id;
 				System.out.printf("제목 : ");
@@ -78,7 +89,7 @@ public class Main {
 				System.out.printf("내용 : ");
 				String body = sc.nextLine();
 
-				Article article = new Article(id, title, body);
+				Article article = new Article(id, regDate, title, body);
 				articles.add(article);
 
 				System.out.printf("%d번글이 생성되었습니다.\n", id);
@@ -90,19 +101,20 @@ public class Main {
 			}
 		}
 
-		sc.close();
+	sc.close();
 
-		System.out.println("== 프로그램 끝 ==");
+	System.out.println("== 프로그램 끝 ==");
 
-	}
-}
+}}
 
 class Article {
 	int id;
+	String regDate;
 	String title;
 	String body;
 
-	Article(int id, String title, String body) {
+	Article(int id, String regdate, String title, String body) {
+		this.regDate = regDate;
 		this.id = id;
 		this.title = title;
 		this.body = body;
