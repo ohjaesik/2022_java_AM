@@ -1,6 +1,7 @@
 package com.koreaIT.java.Am;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,14 +9,14 @@ import com.koreaIT.java.Am.dto.Article;
 import com.koreaIT.java.Am.util.Util;
 
 public class App {
-	
-	private  List<Article> articles;
+
+	private List<Article> articles;
 
 	App() {
 		articles = new ArrayList<>();
 	}
 
-	public void start () {
+	public void start() {
 		System.out.println("== 프로그램 시작 ==");
 
 		makeTestData();
@@ -34,14 +35,29 @@ public class App {
 			if (command.equals("system exit")) {
 				break;
 			}
-			if (command.equals("article list")) {
+			if (command.startsWith("article list")) {
 				if (articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
 					continue;
 				}
+				String searchKeyword = command.substring("article list".length()).trim();
+				List<Article> forListArticles = articles;
+				if (searchKeyword.length() > 0) {
+					forListArticles = new ArrayList<>();
+					for (Article article : articles) {
+						if(article.title.contains(searchKeyword)) {
+							forListArticles.add(article);
+						}
+					}
+					if (forListArticles.size() == 0) {
+						System.out.println("검색 결과가 존재하지 않습니다.");
+						continue;
+					}
+				}
+
 				System.out.println("번호  |  조회  |  제목");
-				for (int i = articles.size() - 1; i >= 0; i--) {
-					Article article = articles.get(i);
+				for (int i = forListArticles.size() - 1; i >= 0; i--) {
+					Article article = forListArticles.get(i);
 
 					System.out.printf("%4d  | %4d   | %s\n", article.id, article.hit, article.title);
 				}
@@ -51,7 +67,7 @@ public class App {
 				int id = Integer.parseInt(commandBits[2]);
 
 				Article foundArticle = getArticleById(id);
-				
+
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
@@ -83,7 +99,6 @@ public class App {
 				int id = Integer.parseInt(commandBits[2]);
 
 				Article foundArticle = getArticleById(id);
-
 
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -127,7 +142,7 @@ public class App {
 		for (Article article : articles) {
 
 			if (article.id == id) {
-				 return i;
+				return i;
 			}
 			i++;
 		}
@@ -140,7 +155,6 @@ public class App {
 		if (index != -1) {
 			return articles.get(index);
 		}
-		
 
 		return null;
 	}
