@@ -1,22 +1,35 @@
 package com.koreaIT.java.Am.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.java.Am.dto.Member;
 import com.koreaIT.java.Am.util.Util;
 
-public class MemberController {
+public class MemberController extends Controller {
 	private Scanner sc;
 	private List<Member> members;
+	private String command;
+	private String actionMethodName;
 
-	public MemberController(Scanner sc, List<Member> members) {
+	public MemberController(Scanner sc) {
 		this.sc = sc;
-		this.members = members;
-		
+		members = new ArrayList<Member>();
 	}
 
-	public void dojoin() {
+	public void doAction(String command, String actionMethodName) {
+		this.command = command;
+		this.actionMethodName = actionMethodName;
+
+		switch (actionMethodName) {
+		case "join":
+			doJoin();
+			break;
+		}
+	}
+
+	public void doJoin() {
 
 		int id = members.size() + 1;
 		String regDate = Util.getNowDateTimeStr();
@@ -76,6 +89,7 @@ public class MemberController {
 			if (member.loginId.equals(loginId)) {
 				return i;
 			}
+			i++;
 		}
 		return -1;
 	}
