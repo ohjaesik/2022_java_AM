@@ -1,19 +1,21 @@
 package com.koreaIT.java.Am;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.java.Am.dto.Article;
+import com.koreaIT.java.Am.dto.Member;
 import com.koreaIT.java.Am.util.Util;
 
 public class App {
 
 	private List<Article> articles;
+	private List<Member> members;
 
 	App() {
 		articles = new ArrayList<>();
+		members = new ArrayList<>();
 	}
 
 	public void start() {
@@ -45,7 +47,7 @@ public class App {
 				if (searchKeyword.length() > 0) {
 					forListArticles = new ArrayList<>();
 					for (Article article : articles) {
-						if(article.title.contains(searchKeyword)) {
+						if (article.title.contains(searchKeyword)) {
 							forListArticles.add(article);
 						}
 					}
@@ -124,6 +126,34 @@ public class App {
 
 				System.out.printf("%d번글이 생성되었습니다.\n", id);
 
+			} else if (command.equals("member join")) {
+				int id = members.size() + 1;
+				regDate = Util.getNowDateTimeStr();
+				System.out.printf("로그인 아이디 : ");
+				String loginId = sc.nextLine();
+				String loginPw = null;
+				String loginPwConfirm = null;
+
+				while (true) {
+					System.out.printf("로그인 비밀번호 : ");
+					loginPw = sc.nextLine();
+					System.out.printf("로그인 비밀번호 확인 : ");
+					loginPwConfirm = sc.nextLine();
+					if (loginPw.equals(loginPwConfirm) == false) {
+						System.out.println("비밀번호를 다시 입력해주세요");
+						continue;
+					}
+
+					break;
+				}
+				System.out.printf("이름 : ");
+				String name = sc.nextLine();
+
+				Member member = new Member(id, regDate, loginId, loginPw, name);
+				members.add(member);
+
+				System.out.printf("%d번 회원이 생성되었습니다. 환영합니다.\n", id);
+
 			}
 
 			else {
@@ -159,17 +189,11 @@ public class App {
 		return null;
 	}
 
-	public void makeTestData() {
-		System.out.println("테스트를 위한 데이터를 생성합니다.");
-		for (int i = 1; i <= 3; i++) {
-			int id = i;
-			String regDate = Util.getNowDateTimeStr();
-			String title = "123";
-			String body = "123";
-			Article TestData = new Article(id, regDate, title, body, 0);
-			articles.add(TestData);
-		}
-
+	private void makeTestData() {
+		System.out.println("테스트를 위한 데이터를 생성합니다");
+		articles.add(new Article(1, Util.getNowDateTimeStr(), "제목1", "내용1", 11));
+		articles.add(new Article(2, Util.getNowDateTimeStr(), "제목2", "내용2", 22));
+		articles.add(new Article(3, Util.getNowDateTimeStr(), "제목3", "내용3", 33));
 	}
 
 }
